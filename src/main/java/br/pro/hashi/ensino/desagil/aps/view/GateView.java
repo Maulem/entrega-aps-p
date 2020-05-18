@@ -16,10 +16,6 @@ import java.net.URL;
 public class GateView extends FixedPanel implements ActionListener, MouseListener {
 
     private final Gate gate;
-    //private final JCheckBox input0;
-    //private final JCheckBox input1;
-    private final Light input0;
-    private final Light input1;
     private final Light output;
     private final Switch zero;
     private final Switch one;
@@ -35,15 +31,11 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
         this.gate = gate;
 
         zero = new Switch();
-        //input0 = new JCheckBox();
-        //input0.addActionListener(this);
-        input0 = new Light(255, 0, 0);
+        Light input0 = new Light(255, 0, 0);
         input0.connect(0, zero);
 
         one = new Switch();
-        //input1 = new JCheckBox();
-        //input1.addActionListener(this);
-        input1 = new Light(255, 0, 0);
+        Light input1 = new Light(255, 0, 0);
         input1.connect(0, one);
 
         three = new Switch();
@@ -59,33 +51,28 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
 
         if (gate.getInputSize() == 1) {
             gate.connect(0, zero);
-            //add(input0, 28, 96, 17, 13);
             updateOne();
         } else if (gate.getInputSize() == 2) {
             gate.connect(0, zero);
             gate.connect(1, one);
-            //add(input0, 28, 63, 17, 13);
-            //add(input1, 28, 129, 17, 13);
             updateTwo();
         }
     }
 
     private void updateOne() {
-        boolean inputzero;
-
-        inputzero = zero.read();
-
-        connect(inputzero);
+        if (gate.read()) {
+            three.turnOn();
+        } else {
+            three.turnOff();
+        }
     }
 
     private void updateTwo() {
-        boolean inputzero;
-        boolean inputone;
-
-        inputzero = zero.read();
-        inputone = one.read();
-
-        connect(inputzero, inputone);
+        if (gate.read()) {
+            three.turnOn();
+        } else {
+            three.turnOff();
+        }
     }
 
     public void connect(boolean inputzero) {
@@ -95,11 +82,7 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
             zero.turnOff();
         }
 
-        if (gate.read()) {
-            three.turnOn();
-        } else {
-            three.turnOff();
-        }
+
     }
 
     public void connect(boolean inputzero, boolean inputone) {
@@ -115,11 +98,7 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
             one.turnOff();
         }
 
-        if (gate.read()) {
-            three.turnOn();
-        } else {
-            three.turnOff();
-        }
+
     }
 
 
@@ -139,6 +118,7 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
         // Descobre em qual posição o clique ocorreu.
         int x = event.getX();
         int y = event.getY();
+
         double Radius = 12.5;
         double xDist = Math.pow((312.5 - x), 2);
         double yDist = Math.pow((102.5 - y), 2);
@@ -148,6 +128,58 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
             color = JColorChooser.showDialog(this, null, color);
             output.setColor(color);
             repaint();
+        }
+        if (gate.getInputSize() == 1) {
+            if (x >= 28) {
+                if (x <= 45) {
+                    if (y >= 96) {
+                        if (y <= 109) {
+                            if (zero.read()) {
+                                zero.turnOff();
+                            }
+                            else {
+                                zero.turnOn();
+                            }
+                            updateOne();
+                            repaint();
+                        }
+                    }
+                }
+            }
+        }
+        if (gate.getInputSize() == 2) {
+            if (x >= 28) {
+                if (x <= 45) {
+                    if (y >= 63) {
+                        if (y <= 76) {
+                            if (zero.read()) {
+                                zero.turnOff();
+                            }
+                            else {
+                                zero.turnOn();
+                            }
+                            updateTwo();
+                            repaint();
+                        }
+                    }
+                }
+            }
+            if (x >= 28) {
+                if (x <= 45) {
+                    if (y >= 129) {
+                        if (y <= 142) {
+                            if (one.read()) {
+                                one.turnOff();
+                            }
+                            else {
+                                one.turnOn();
+                            }
+                            updateTwo();
+                            repaint();
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -197,13 +229,24 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
 
         if (gate.getInputSize() == 1) {
             g.setColor(Color.BLACK);
-            g.fillRect(28, 96, 17, 13);
-
+            if (zero.read()) {
+                g.fillRect(28, 96, 17, 13);
+            } else {
+                g.drawRect(28, 96, 17, 13);
+            }
 
         } else if (gate.getInputSize() == 2) {
             g.setColor(Color.BLACK);
-            g.fillRect(28, 63, 17, 13);
-            g.fillRect(28, 129, 17, 13);
+            if (zero.read()) {
+                g.fillRect(28, 63, 17, 13);
+            } else {
+                g.drawRect(28, 63, 17, 13);
+            }
+            if (one.read()) {
+                g.fillRect(28, 129, 17, 13);
+            } else {
+                g.drawRect(28, 129, 17, 13);
+            }
         }
 
 
