@@ -16,8 +16,10 @@ import java.net.URL;
 public class GateView extends FixedPanel implements ActionListener, MouseListener {
 
     private final Gate gate;
-    private final JCheckBox input0;
-    private final JCheckBox input1;
+    //private final JCheckBox input0;
+    //private final JCheckBox input1;
+    private final Light input0;
+    private final Light input1;
     private final Light output;
     private final Switch zero;
     private final Switch one;
@@ -33,12 +35,16 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
         this.gate = gate;
 
         zero = new Switch();
-        input0 = new JCheckBox();
-        input0.addActionListener(this);
+        //input0 = new JCheckBox();
+        //input0.addActionListener(this);
+        input0 = new Light(255, 0, 0);
+        input0.connect(0, zero);
 
         one = new Switch();
-        input1 = new JCheckBox();
-        input1.addActionListener(this);
+        //input1 = new JCheckBox();
+        //input1.addActionListener(this);
+        input1 = new Light(255, 0, 0);
+        input1.connect(0, one);
 
         three = new Switch();
         output = new Light(255, 0, 0);
@@ -53,13 +59,13 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
 
         if (gate.getInputSize() == 1) {
             gate.connect(0, zero);
-            add(input0, 28, 96, 17, 13);
+            //add(input0, 28, 96, 17, 13);
             updateOne();
         } else if (gate.getInputSize() == 2) {
             gate.connect(0, zero);
             gate.connect(1, one);
-            add(input0, 28, 63, 17, 13);
-            add(input1, 28, 129, 17, 13);
+            //add(input0, 28, 63, 17, 13);
+            //add(input1, 28, 129, 17, 13);
             updateTwo();
         }
     }
@@ -67,7 +73,7 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
     private void updateOne() {
         boolean inputzero;
 
-        inputzero = input0.isSelected();
+        inputzero = zero.read();
 
         connect(inputzero);
     }
@@ -76,8 +82,8 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
         boolean inputzero;
         boolean inputone;
 
-        inputzero = input0.isSelected();
-        inputone = input1.isSelected();
+        inputzero = zero.read();
+        inputone = one.read();
 
         connect(inputzero, inputone);
     }
@@ -188,6 +194,18 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
         // Desenha um quadrado cheio.
         g.setColor(output.getColor());
         g.fillOval(300, 90, 25, 25);
+
+        if (gate.getInputSize() == 1) {
+            g.setColor(Color.BLACK);
+            g.fillRect(28, 96, 17, 13);
+
+
+        } else if (gate.getInputSize() == 2) {
+            g.setColor(Color.BLACK);
+            g.fillRect(28, 63, 17, 13);
+            g.fillRect(28, 129, 17, 13);
+        }
+
 
         // Linha necessária para evitar atrasos
         // de renderização em sistemas Linux.
