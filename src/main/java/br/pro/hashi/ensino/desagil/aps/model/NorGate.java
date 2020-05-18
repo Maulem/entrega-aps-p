@@ -1,6 +1,6 @@
 package br.pro.hashi.ensino.desagil.aps.model;
 
-public class NorGate {
+public class NorGate extends Gate {
 
     private final NandGate nandCima;
     private final NandGate nandBaixo;
@@ -9,7 +9,7 @@ public class NorGate {
 
 
     public NorGate() {
-        super("XOR", 2);
+        super("NOR", 2);
         //Criando os objetos
         nandCima = new NandGate();
         nandBaixo = new NandGate();
@@ -36,12 +36,12 @@ public class NorGate {
             case 0:
 
                 nandCima.connect(0, emitter);
-                nandEsq.connect(0, emitter);
+                nandCima.connect(1, emitter);
                 break;
 
             case 1:
 
-                nandEsq.connect(1, emitter);
+                nandBaixo.connect(0, emitter);
                 nandBaixo.connect(1, emitter);
                 break;
 
